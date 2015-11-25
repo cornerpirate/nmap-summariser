@@ -44,9 +44,13 @@ def main():
         for host_tag in hosts:
                 address_tag = host_tag.getElementsByTagName("address")[0]
                 ip_addy = address_tag.getAttribute("addr")
+		hostname = "Unknown"
 
-		hostname_tag = host_tag.getElementsByTagName("hostname")[0]
-		hostname = hostname_tag.getAttribute("name")
+		try:
+			hostname_tag = host_tag.getElementsByTagName("hostname")[0]
+			hostname = hostname_tag.getAttribute("name")
+		except:
+			a="a" # not all scans have hostname tags
 
 		try:
 	       	        _ports = host_tag.getElementsByTagName("ports")[0]
@@ -70,10 +74,6 @@ def main():
 	        	        		if cmp(state, "open") == 0:
                 	               			port_protocol = port.getAttribute("protocol")
 						
-							#service_name = "Unknown"
-							#service_product = "Unknown"
-							#service_version = "Unknown"
-
 							service_tag = port.getElementsByTagName("service")[0]
 							service_name =  service_tag.getAttribute("name")
 							service_product =  service_tag.getAttribute("product")
