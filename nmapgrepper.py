@@ -1,9 +1,9 @@
 #! /usr/bin/python
 #
-# calling: ./nmapsummariser.py <nmap_xml_file>
+# calling: ./nmapgrepper.py <nmap_xml_file>
 # for example: ./nmapsummariser.py nmap-full-tcp.xml
 #
-# Copyright 2015 cornerpirate.
+# Copyright 2016 cornerpirate.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,10 +63,6 @@ def main():
                 ports = _ports.getElementsByTagName("port")
 
                 if hasOpenPort(ports)==1:
-                    ## Display IP and hostname information
-                    #print "Scan Results for " + ip_addy + "\n"
-                    #print "Registered hostnames: " + hostname + "\n"
-                    # print "Port,State,Service,Product,Version,Extra"
 
                     for port in ports:
                         portnum =  port.getAttribute("portid")
@@ -91,7 +87,6 @@ def main():
                                 	service_version =  service_tag.getAttribute("version")
 
 				print ip_addy + ":" +  portnum + ":" + port_protocol + ":" + service_name + ":" + service_product + ":" + service_version
-                                #print "\"" + portnum + "\",\"" + state + "\",\"" + service_name + "\",\"" + service_product + ",\"" + service_version + "\""
 
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
