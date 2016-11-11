@@ -58,18 +58,15 @@ def main():
 
             try:
 
-		if len(host_tag.getElementsByTagName("ports"))==0:
-			print "No ports found"
-			sys.exit(-1)
 
                 _ports = host_tag.getElementsByTagName("ports")[0]
                 ports = _ports.getElementsByTagName("port")
 
                 if hasOpenPort(ports)==1:
                     ## Display IP and hostname information
-                    print "Scan Results for " + ip_addy + "\n"
-                    print "Registered hostnames: " + hostname + "\n"
-                    print "Port,State,Service,Product,Version,Extra"
+                    #print "Scan Results for " + ip_addy + "\n"
+                    #print "Registered hostnames: " + hostname + "\n"
+                    # print "Port,State,Service,Product,Version,Extra"
 
                     for port in ports:
                         portnum =  port.getAttribute("portid")
@@ -86,14 +83,15 @@ def main():
 				service_name = "Unknown"
 				service_product = "Unknown"
 				service_version = "Unknown"
-	
+
 				if len(port.getElementsByTagName("service")) !=0:
                                		service_tag = port.getElementsByTagName("service")[0]
                                 	service_name =  service_tag.getAttribute("name")
                                 	service_product =  service_tag.getAttribute("product")
                                 	service_version =  service_tag.getAttribute("version")
 
-                                print "\"" + portnum + "\",\"" + state + "\",\"" + service_name + "\",\"" + service_product + ",\"" + service_version + "\""
+				print ip_addy + ":" +  portnum + ":" + port_protocol + ":" + service_name + ":" + service_product + ":" + service_version
+                                #print "\"" + portnum + "\",\"" + state + "\",\"" + service_name + "\",\"" + service_product + ",\"" + service_version + "\""
 
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
