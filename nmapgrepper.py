@@ -1,5 +1,4 @@
 #! /usr/bin/python3
-# Python3 re-write by ZephrFish & nimxj
 # calling: ./nmapgrepper.py <nmap_xml_file>
 # for example: ./nmapsummariser.py nmap-full-tcp.xml
 #
@@ -50,6 +49,12 @@ def main():
         for host_tag in hosts:
             address_tag = host_tag.getElementsByTagName("address")[0]
             ip_addy = address_tag.getAttribute("addr")
+
+            # check if host was up. If it was down then skip to next
+            status = host_tag.getElementsByTagName("status")[0].getAttribute("state")
+            if status != "up":
+                continue # skip to next for loop as this host was not up
+
             hostname = "Unknown"
 
             try:
@@ -60,7 +65,6 @@ def main():
 
             try:
 
-
                 _ports = host_tag.getElementsByTagName("ports")[0]
                 ports = _ports.getElementsByTagName("port")
 
@@ -69,25 +73,22 @@ def main():
                     for port in ports:
                         portnum =  port.getAttribute("portid")
                         protocol = port.getAttribute("protocol")
+                        state = port.getElementsByTagName("state")[0].getAttribute("state")
+                        if state != "open":
+                            continue # skip to the next port
 
-                        if len(port.getElementsByTagName("state")) > 0:
-
-                            state_tag = port.getElementsByTagName("state")[0]
-                            state = state_tag.getAttribute("state")
-
-                            if state.__eq__("open"):
-                                port_protocol = port.getAttribute("protocol")
-                                service_name = "Unknown"
-                                service_product = "Unknown"
-                                service_version = "Unknown"
+                        # if we get here the port is in an open state
+                        service_name    = "Unknown"
+                        service_product = "Unknown"
+                        service_version = "Unknown"
 
                         if len(port.getElementsByTagName("service")) != 0:
                             service_tag = port.getElementsByTagName("service")[0]
                             service_name =  service_tag.getAttribute("name")
                             service_product =  service_tag.getAttribute("product")
                             service_version =  service_tag.getAttribute("version")
-                    
-                    print(ip_addy + ":" +  portnum + ":" + port_protocol + ":" + service_name + ":" + service_product + ":" + service_version)
+
+                        print(ip_addy + ":" +  portnum + ":" + protocol + ":" + service_name + ":" + service_product + ":" + service_version)
 
             except Exception as e:
                 print(e)
